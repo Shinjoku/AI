@@ -1,0 +1,4 @@
+A busca efetuada deve ser por profundidade.
+A entrada será dada por um arquivo.
+Tanto o terreno quanto a posição inicial do robô estão contidos
+  nesse arquivo.
