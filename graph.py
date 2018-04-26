@@ -1,28 +1,26 @@
-from colorama import init, Back, Style, Fore
-import sys
-import time
+from colorama import init, Back, Style, Fore        # Classes relativas ao letreiro do terminal / cmd
+import sys                                          # Classe relativa aos recursos gerais do sistema
+import time                                         # Classe relativa aos recursos temporizadores do sistema
 
 
 class Graph():
+    """
+        Classe respectiva ao 'grafo' que será analisado
+    """
 
     # Variáveis
-    terrain = []
-    robot = 0
-    dest = 0
+    terrain = []    # Irá conter o terreno
+    robot = 0       # Irá conter a posição do robô
+    dest = 0        # Irá conter a posição do destino
 
     # Métodos
     def print_terrain(self):
-        """
+        """ Não tem retorno
             Printa a matriz representativa do terreno
         """
 
         # Avalia o sistema e prepara o stdout para que a cor saia corretamente
         init(autoreset = True)
-
-        # for i in range(10):
-        #     sys.stdout.write( "\r{0}>".format("=" * i) )
-        #     sys.stdout.flush()
-        #     time.sleep(0.5)
 
         # Define uma cor específica para cada valor da matriz
         for i in range(42):
@@ -51,8 +49,11 @@ class Graph():
                     3 - 10
                     4 - 15
         """
+
+        # Inicializa o somatório como 0
         total = 0
 
+        # Percorre o dicionário identificando os valores das chaves e fazendo a soma
         for dict in path:
             for i in dict.keys():
                 if ( dict[i] == 1 ):
@@ -63,19 +64,24 @@ class Graph():
                     total += 10
                 if ( dict[i] == 4):
                     total += 15
-        return total
+        return total            # Retorna o total acumulado na busca
+
 
     def print_path(self, path):
-        for dict in path:
-            for i in dict:
-                print(i, end = ' ')
-        print()
+        """ Não tem retorno
+            Exibe o caminho que foi obtido com a busca
+        """
+
+        for dict in path:           # Para cada dicionário em path
+            for i in dict:          # Para cada item do dicionário
+                print(i, end = ' ') # Exibe o nome do item
+        print()                     # Exibe uma linha em branco
 
 
     def create_matrix(self, path):
-        """
+        """ Não tem retorno
             Cria uma matriz, abrindo o arquivo e
-                modificando a atual da classe
+                modificando o terreno atual da classe
         """
 
         # Abre o arquivo de entrada, que deve estar localizado na mesma pasta
@@ -107,8 +113,10 @@ class Graph():
         self.terrain[self.dest[0]][self.dest[1]] = 5
 
         # Printa o terreno
+        self.print_terrain()
         print()
         print()
+
 
     def depth_search(self):
         """ Retorna True ao suceder, False ao falhar
@@ -117,59 +125,71 @@ class Graph():
         """
 
         # Inicialização das variáveis
-        path = []
-        view = []
-        border = []
-        passed = []
-        total = 0
+        path = []       # Irá conter o caminho percorrido
+        view = []       # Irá conter o que está em vista para ser buscado
+        border = []     # Irá conter a borda do algoritmo
+        passed = []     # Irá conter as posições já percorridas
 
-        # Inicio
+        # Inicio da busca
 
         # Salva a posição inicial
         view.append( {'ORIGIN': 0} )
         border.append( [self.robot[0], self.robot[1]] )
 
-
+        # Enquanto houver 'nós' a serem percorridos
         while( len(border) > 0 ):
 
-            # Para cada item na lista de nos adjacentes
+            # Remove o último nó da lista para ser avaliado
             noAtual = border.pop()
+
+            # Remove o nó que está sendo avaliado para ser levado ao caminho,
+            #   pois está sendo percorrido
             path.append(view.pop())
+
+            # Seta o valor do terreno como 0, pois já está sendo percorrido
             self.terrain[noAtual[0]][noAtual[1]] = 0
 
-            # Verifica se eh o destino
+            # Verifica se é o destino
             if(noAtual == self.dest):
                 self.print_terrain()
                 self.print_path(path)
-                print('Tamanho borda: ', len(view))
                 print('Custo total:', self.cost(path))
-                return True
+                return True         # Sucesso na busca
 
+            # Se não for o destino
             else:
 
+                # Guarda a posição atual para simplificar citações futuras
                 i = noAtual[0]
                 j = noAtual[1]
 
+                # Procura vizinho ao oeste, se for possível
+                # Está primeiro para que tenha a menor prioridade
                 if (j-1 in range(len(self.terrain)) and ( [i, j-1] not in passed )):
                     view.append( {'W': self.terrain[i][j-1] })
                     border.append([i, j-1])
 
+                # Procura vizinho ao Sul, se for possível
+                # Tem uma prioridade maior que o Oeste
                 if (i+1 in range(len(self.terrain)) and ( [i+1, j] not in passed )):
                     view.append( {'S': self.terrain[i+1][j] })
                     border.append([i+1, j])
 
+                # Procura vizinho ao Leste, se for possível
+                # Tem prioridade maior que o Sul
                 if (j+1 in range(len(self.terrain)) and ( [i, j+1] not in passed )):
                     view.append( {'E': self.terrain[i][j+1] })
                     border.append([i, j+1])
 
+                # Procura vizinho ao Norte, se for possível
+                # Tem a maior prioridade de todos
                 if (i-1 in range(len(self.terrain)) and ( [i-1, j] not in passed )):
                     view.append( {'N': self.terrain[i-1][j] })
                     border.append([i-1, j])
 
+                # Nó atual é levado à lista de nós já visitados
                 passed.append(noAtual)
 
-        return False
+        return False            # Falha na busca
 
-
-
-# End class Node
+# Fim da classe Graph
