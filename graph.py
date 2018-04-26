@@ -1,15 +1,17 @@
-from colorama import init, Back, Style
+from colorama import init, Back, Style, Fore
 import sys
 import time
-from threading import Thread
 
-class print_terrain(Thread):
-    def __init__(self, num, terrain):
-        Thread.__init__(self)
-        self.num = num
-        self.terrain = terrain
 
-    def run(self):
+class Graph():
+
+    # Variáveis
+    terrain = []
+    robot = 0
+    dest = 0
+
+    # Métodos
+    def print_terrain(self):
         """
             Printa a matriz representativa do terreno
         """
@@ -26,33 +28,18 @@ class print_terrain(Thread):
         for i in range(42):
             for j in range (42):
                 if( self.terrain[i][j] == 0 ):
-                    print( Back.CYAN + '    ', end = '')
+                    print( Back.CYAN +  Fore.BLACK + '|   ', end = '')
                 if( self.terrain[i][j] == 1 ):
-                    print( Back.GREEN + '    ', end = '' )
+                    print( Back.GREEN + Fore.BLACK + '|   ', end = '' )
                 if( self.terrain[i][j] == 2 ):
-                    print( Back.YELLOW + '    ', end = '')
+                    print( Back.YELLOW + Fore.BLACK + '|   ', end = '')
                 if( self.terrain[i][j] == 3 ):
-                    print( Back.BLUE + '    ', end = '')
+                    print( Back.BLUE + Fore.BLACK + '|   ', end = '')
                 if( self.terrain[i][j] == 4 ):
-                    print( Back.RED + '    ', end = '')
+                    print( Back.RED + Fore.BLACK + '|   ', end = '')
                 if( self.terrain[i][j] == 5 ):
-                    print( Back.MAGENTA + '    ', end = '')
+                    print( Back.MAGENTA + Fore.BLACK + '|   ', end = '')
             print ('\n')
-
-
-class Graph(Thread):
-
-    # Variables
-    terrain = []
-    robot = 0
-    dest = 0
-
-
-    # Methods
-    def __init__(self, num):
-        Thread.__init__(self)
-        self.num = num
-
 
     def cost(self, path):
         """ Retorna um inteiro
@@ -152,6 +139,7 @@ class Graph(Thread):
 
             # Verifica se eh o destino
             if(noAtual == self.dest):
+                self.print_terrain()
                 self.print_path(path)
                 print('Tamanho borda: ', len(view))
                 print('Custo total:', self.cost(path))
@@ -182,16 +170,6 @@ class Graph(Thread):
 
         return False
 
-    def run(self):
-        self.create_matrix("in")
 
-        pt_tr = print_terrain(2, self.terrain)
-        pt_tr.start()
-        time.sleep(0.5)
-
-        if ( self.depth_search() ):
-            print('Busca concluída com sucesso, destino encontrado.')
-        else:
-            print('A busca falhou, o objetivo não foi encontrado.')
 
 # End class Node

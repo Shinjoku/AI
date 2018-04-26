@@ -1,0 +1,10 @@
+asciimatics==1.9.0
+colorama==0.3.9
+future==0.16.0
+numpy==1.14.2
+Pillow==5.1.0
+pyfiglet==0.7.5
+pypiwin32==223
+pywin32==223
+six==1.11.0
+wcwidth==0.1.7
