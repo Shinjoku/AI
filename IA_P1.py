@@ -1,6 +1,6 @@
 from graph import Graph
 
-# Variables
+# Variáveis
 border = []
-graph = Graph()
-graph.create_matrix("in")
+graph = Graph(1)
+graph.start()
