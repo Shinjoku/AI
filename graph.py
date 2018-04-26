@@ -190,6 +190,8 @@ class Graph():
                 # Nó atual é levado à lista de nós já visitados
                 passed.append(noAtual)
 
+            print('\n')
+            self.print_terrain()
         return False            # Falha na busca
 
 # Fim da classe Graph
